@@ -171,17 +171,13 @@ projectPreviewBtns.forEach(btn => {
         
         const modalLink = document.getElementById("projectModalLink");
         modalLink.href = btn.dataset.link;
+        modalLink.target = "_blank";
+        modalLink.rel = "noopener noreferrer";
         
-        // Update button text (Default to 'Explore Project' if not specified)
-        const btnText = btn.dataset.btnText || "Explore Project";
-        modalLink.innerHTML = `${btnText} <i class="fas fa-arrow-right"></i>`;
+        const btnText = btn.dataset.btnText || "Explore Project Code";
+        modalLink.innerHTML = `${btnText} <i class="fab fa-github"></i>`;
 
-        // If link goes to contact section, close modal on click
-        modalLink.onclick = () => {
-            if (btn.dataset.link === "#contact") {
-                closeProjectModal();
-            }
-        };
+        modalLink.onclick = null; // Clear modal-closing handlers
 
         projectModal.classList.add("active");
         document.body.style.overflow = "hidden";
