@@ -62,7 +62,7 @@ if (menuToggle && navLinks) {
 }
 
 /* =========================================================
-   DASHBOARD GALLERY (FIXED)
+   DASHBOARD GALLERY
 ========================================================= */
 
 const dashboardImages = [
@@ -160,28 +160,31 @@ filterBtns.forEach(btn => {
 
 const projectModal = document.getElementById("projectModal");
 const projectModalClose = document.getElementById("projectModalClose");
-const projectPreviewBtns = document.querySelectorAll(".project-preview-btn");
 
-projectPreviewBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.getElementById("projectModalTitle").textContent = btn.dataset.title;
-        document.getElementById("projectModalDesc").textContent = btn.dataset.desc;
-        document.getElementById("projectModalTech").textContent = btn.dataset.tech;
-        document.getElementById("projectModalImg").src = btn.dataset.img;
-        
-        const modalLink = document.getElementById("projectModalLink");
-        modalLink.href = btn.dataset.link;
-        modalLink.target = "_blank";
-        modalLink.rel = "noopener noreferrer";
-        
-        const btnText = btn.dataset.btnText || "Explore Project Code";
-        modalLink.innerHTML = `${btnText} <i class="fab fa-github"></i>`;
+// Delegate click listener so new projects work dynamically
+document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".project-preview-btn");
+    if (!btn) return;
 
-        modalLink.onclick = null; // Clear modal-closing handlers
+    document.getElementById("projectModalTitle").textContent = btn.dataset.title;
+    document.getElementById("projectModalDesc").textContent = btn.dataset.desc;
+    document.getElementById("projectModalTech").textContent = btn.dataset.tech;
+    document.getElementById("projectModalImg").src = btn.dataset.img;
+    
+    const modalLink = document.getElementById("projectModalLink");
+    modalLink.href = btn.dataset.link;
+    modalLink.target = "_blank";
+    modalLink.rel = "noopener noreferrer";
+    
+    const btnText = btn.dataset.btnText || "Explore Live Project";
+    modalLink.innerHTML = `${btnText} <i class="fas fa-arrow-right"></i>`;
 
+    modalLink.onclick = null; // Clear modal-closing handlers
+
+    if (projectModal) {
         projectModal.classList.add("active");
         document.body.style.overflow = "hidden";
-    });
+    }
 });
 
 function closeProjectModal() {
@@ -193,6 +196,14 @@ function closeProjectModal() {
 
 if (projectModalClose) {
     projectModalClose.addEventListener("click", closeProjectModal);
+}
+
+if (projectModal) {
+    projectModal.addEventListener("click", (e) => {
+        if (e.target === projectModal) {
+            closeProjectModal();
+        }
+    });
 }
 
 /* =========================================================
@@ -255,9 +266,11 @@ if (currentYear) currentYear.textContent = new Date().getFullYear();
 const backToTopBtn = document.getElementById("backToTop");
 
 window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-        backToTopBtn.classList.add("show");
-    } else {
-        backToTopBtn.classList.remove("show");
+    if (backToTopBtn) {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add("show");
+        } else {
+            backToTopBtn.classList.remove("show");
+        }
     }
 });
